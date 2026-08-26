@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PassCheck ✨ Password Vibe Checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Space+Mono:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#0f0b1e;
+    --bg2:#1a1233;
+    --panel:#221a3d;
+    --line:#3a2c66;
+    --text:#f4f0ff;
+    --text-dim:#b3a6d9;
+    --pink:#ff5fb3;
+    --purple:#a86bff;
+    --cyan:#3ff0e0;
+    --yellow:#ffe14d;
+    --safe:#33e2a0;
+    --warn:#ffcc4d;
+    --danger:#ff5c7a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255,95,179,0.18), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(63,240,224,0.15), transparent 40%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    color:var(--text);
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:1040px;
+    margin:0 auto;
+    padding:44px 20px 80px;
+  }
+  header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:32px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:36px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:linear-gradient(90deg, var(--pink), var(--purple), var(--cyan));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header p{
+    margin:6px 0 0;
+    color:var(--text-dim);
+    font-size:13px;
+    max-width:300px;
+    line-height:1.5;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+  @media(min-width:820px){
+    .grid{grid-template-columns:1fr 1.15fr;}
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:26px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.25);
+  }
+  .eyebrow{
+    font-family:'Baloo 2',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:var(--yellow);
+    margin:0 0 14px;
+  }
+  label{
+    display:block;
+    font-size:13px;
+    color:var(--text-dim);
+    margin-bottom:8px;
+  }
+  .input-row{
+    display:flex;
+    gap:8px;
+  }
+  input[type="text"],input[type="password"]{
+    flex:1;
+    background:var(--bg1);
+    border:2px solid var(--line);
+    border-radius:12px;
+    padding:12px 14px;
+    color:var(--text);
+    font-family:'Space Mono',monospace;
+    font-size:15px;
+    outline:none;
+    transition:border-color 0.2s ease;
+  }
+  input:focus{border-color:var(--pink);}
+  button{
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    cursor:pointer;
+    border-radius:12px;
+    border:2px solid var(--line);
+    background:var(--bg1);
+    color:var(--text);
+    padding:0 16px;
+    font-size:13px;
+    transition:transform 0.15s ease, border-color 0.15s ease;
+  }
+  button:hover{border-color:var(--purple); transform:translateY(-1px);}
+  button:active{transform:translateY(0);}
+  button:focus-visible, input:focus-visible{outline:2px solid var(--cyan); outline-offset:2px;}
+  .toggle-btn{min-width:60px;}
+  .clear-btn{
+    margin-top:10px;
+    width:100%;
+    padding:10px;
+    color:var(--text-dim);
+  }
+  .presets{
+    margin-top:22px;
+  }
+  .preset-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+  }
+  .preset-list button{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    padding:7px 12px;
+    background:linear-gradient(135deg, rgba(255,95,179,0.12), rgba(63,240,224,0.12));
+  }
+  .note{
+    margin-top:22px;
+    font-size:12px;
+    color:var(--text-dim);
+    line-height:1.6;
+    border-top:1px dashed var(--line);
+    padding-top:16px;
+  }
+  .note strong{color:var(--cyan);}
+
+  /* Meter */
+  .gauge-wrap{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom:22px;
+  }
+  .tumblers{
+    display:flex;
+    gap:6px;
+  }
+  .pin{
+    width:16px;
+    height:44px;
+    border-radius:8px;
+    background:var(--bg1);
+    border:2px solid var(--line);
+    transition:background 0.4s ease, border-color 0.4s ease, transform 0.3s ease, box-shadow 0.4s ease;
+  }
+  .pin.lit{transform:translateY(-4px) scale(1.05);}
+  .verdict{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:28px;
+  }
+  .verdict-sub{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:var(--text-dim);
+    margin-top:2px;
+  }
+  .factors{
+    list-style:none;
+    margin:0 0 20px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .factors li{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  .dot{
+    width:9px;height:9px;
+    border-radius:50%;
+    margin-top:6px;
+    flex-shrink:0;
+  }
+  .dot.ok{background:var(--safe); box-shadow:0 0 8px var(--safe);}
+  .dot.bad{background:var(--danger); box-shadow:0 0 8px var(--danger);}
+  .dot.mid{background:var(--warn); box-shadow:0 0 8px var(--warn);}
+  .factors .label-txt{color:var(--text);}
+  .factors .detail{color:var(--text-dim);}
+
+  .recs{
+    background:var(--bg1);
+    border:2px solid var(--line);
+    border-radius:16px;
+    padding:16px 18px;
+  }
+  .recs h3{
+    margin:0 0 10px;
+    font-size:13px;
+    font-family:'Baloo 2',sans-serif;
+    font-weight:700;
+    color:var(--pink);
+    letter-spacing:0.02em;
+  }
+  .recs ul{
+    margin:0;
+    padding-left:18px;
+    font-size:13.5px;
+    line-height:1.7;
+    color:var(--text-dim);
+  }
+  .recs.good{border-color:var(--safe);}
+  .recs.good h3{color:var(--safe);}
+  .empty-state{
+    color:var(--text-dim);
+    font-family:'Space Mono',monospace;
+    font-size:13px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="brand">🔐 PassCheck</div>
+      <p>Local password vibe check — nothing you type gets stored, logged, or sent anywhere. It all stays on your screen. ✨</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- Input panel -->
+    <div class="panel">
+      <p class="eyebrow">🧪 drop a password to test</p>
+      <label for="pw">Sample/test passwords only — never a real one pls</label>
+      <div class="input-row">
+        <input type="password" id="pw" placeholder="type or pick a sample below" autocomplete="off" spellcheck="false">
+        <button class="toggle-btn" id="toggleBtn" type="button" aria-label="Show password">👁️ Show</button>
+      </div>
+      <button class="clear-btn" id="clearBtn" type="button">🧹 Clear input</button>
+
+      <div class="presets">
+        <p class="eyebrow" style="margin-bottom:0;">🎲 quick test cases</p>
+        <div class="preset-list" id="presetList"></div>
+      </div>
+
+      <div class="note">
+        <strong>Privacy note:</strong> analysis happens 100% client-side in your browser's memory. The password never touches storage, network, or console. Clear the input or close the tab and it's gone for good.
+      </div>
+    </div>
+
+    <!-- Results panel -->
+    <div class="panel" id="resultsPanel">
+      <p class="eyebrow">📊 the verdict</p>
+      <div id="results">
+        <p class="empty-state">waiting on you... type a password or tap a test case above 👀</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const COMMON = new Set(["123456","123456789","password","password1","12345678","qwerty",
+    "111111","123123","abc123","letmein","admin","welcome","monkey","football","iloveyou",
+    "1234567","1234567890","123321","000000","qwerty123","admin123","passw0rd","1q2w3e4r",
+    "sunshine","princess","dragon","master","login","starwars","freedom","whatever","trustno1"]);
+
+  const KEYBOARD_RUNS = ["qwertyuiop","asdfghjkl","zxcvbnm","1234567890","qazwsx","1qaz2wsx"];
+
+  const PRESETS = [
+    "123456",
+    "password",
+    "qwertyuiop",
+    "P@ssw0rd",
+    "aaaaaaaa",
+    "MyDog2024",
+    "Tr0ub4dor&3",
+    "correct horse battery staple",
+    "Xk9#mP2$vL8@nQ4!"
+  ];
+
+  const pwInput = document.getElementById('pw');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const presetList = document.getElementById('presetList');
+  const results = document.getElementById('results');
+
+  PRESETS.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = p;
+    b.addEventListener('click', () => {
+      pwInput.value = p;
+      analyze();
+    });
+    presetList.appendChild(b);
+  });
+
+  toggleBtn.addEventListener('click', () => {
+    const showing = pwInput.type === 'text';
+    pwInput.type = showing ? 'password' : 'text';
+    toggleBtn.textContent = showing ? '👁️ Show' : '🙈 Hide';
+  });
+
+  clearBtn.addEventListener('click', () => {
+    pwInput.value = '';
+    analyze();
+    pwInput.focus();
+  });
+
+  pwInput.addEventListener('input', analyze);
+
+  function hasSequentialRun(str, minLen){
+    const s = str.toLowerCase();
+    for(let i=0;i<=s.length-minLen;i++){
+      let asc = true, desc = true;
+      for(let j=1;j<minLen;j++){
+        const a = s.charCodeAt(i+j) - s.charCodeAt(i+j-1);
+        if(a !== 1) asc = false;
+        if(a !== -1) desc = false;
+      }
+      if(asc || desc) return true;
+    }
+    return false;
+  }
+
+  function hasRepeatedRun(str, minLen){
+    let run = 1;
+    for(let i=1;i<str.length;i++){
+      if(str[i] === str[i-1]){
+        run++;
+        if(run >= minLen) return true;
+      } else {
+        run = 1;
+      }
+    }
+    return false;
+  }
+
+  function hasKeyboardRun(str, minLen){
+    const s = str.toLowerCase();
+    for(const row of KEYBOARD_RUNS){
+      for(let i=0;i<=row.length-minLen;i++){
+        const chunk = row.slice(i, i+minLen);
+        if(s.includes(chunk)) return true;
+        const rev = chunk.split('').reverse().join('');
+        if(s.includes(rev)) return true;
+      }
+    }
+    return false;
+  }
+
+  function isCommon(pw){
+    const lower = pw.toLowerCase();
+    if(COMMON.has(lower)) return true;
+    const stripped = lower.replace(/[0-9!@#$%^&*]+$/,'');
+    if(stripped.length >= 4 && COMMON.has(stripped)) return true;
+    return false;
+  }
+
+  function analyze(){
+    const pw = pwInput.value;
+
+    if(pw.length === 0){
+      results.innerHTML = '<p class="empty-state">waiting on you... type a password or tap a test case above 👀</p>';
+      return;
+    }
+
+    const len = pw.length;
+    const hasLower = /[a-z]/.test(pw);
+    const hasUpper = /[A-Z]/.test(pw);
+    const hasDigit = /[0-9]/.test(pw);
+    const hasSymbol = /[^a-zA-Z0-9]/.test(pw);
+    const classCount = [hasLower,hasUpper,hasDigit,hasSymbol].filter(Boolean).length;
+
+    let charsetSize = 0;
+    if(hasLower) charsetSize += 26;
+    if(hasUpper) charsetSize += 26;
+    if(hasDigit) charsetSize += 10;
+    if(hasSymbol) charsetSize += 32;
+    const entropy = charsetSize > 0 ? +(len * Math.log2(charsetSize)).toFixed(1) : 0;
+
+    const common = isCommon(pw);
+    const sequential = hasSequentialRun(pw, 3);
+    const keyboard = hasKeyboardRun(pw, 4);
+    const repeated = hasRepeatedRun(pw, 3);
+
+    // Scoring
+    let score = 0;
+    if(len >= 8) score += 15;
+    if(len >= 12) score += 15;
+    if(len >= 16) score += 10;
+    score += classCount * 10;
+    score += Math.min(20, entropy / 4);
+
+    if(len < 8) score -= 20;
+    if(sequential) score -= 15;
+    if(keyboard) score -= 15;
+    if(repeated) score -= 15;
+    if(common) score = Math.min(score, 12);
+
+    score = Math.max(0, Math.min(100, Math.round(score)));
+
+    let label, color, tier;
+    if(score < 20){ label = 'Big Yikes 💀'; color = 'var(--danger)'; tier = 1; }
+    else if(score < 40){ label = 'Weak Sauce 😬'; color = 'var(--danger)'; tier = 2; }
+    else if(score < 60){ label = 'Mid 🤔'; color = 'var(--warn)'; tier = 3; }
+    else if(score < 80){ label = 'Pretty Solid 💪'; color = 'var(--safe)'; tier = 4; }
+    else { label = 'Absolutely Iconic 🔥'; color = 'var(--safe)'; tier = 5; }
+
+    // Factors list
+    const factors = [];
+    factors.push({
+      ok: len >= 12,
+      mid: len >= 8 && len < 12,
+      text: `Length: ${len} character${len===1?'':'s'}`,
+      detail: len < 8 ? 'shorter than the 8-character minimum most systems require' :
+              len < 12 ? 'meets the minimum, but 12+ is recommended' : 'good length'
+    });
+    factors.push({
+      ok: classCount >= 3,
+      mid: classCount === 2,
+      text: `Character variety: ${classCount} of 4 types used`,
+      detail: `${hasLower?'lowercase ':''}${hasUpper?'uppercase ':''}${hasDigit?'digits ':''}${hasSymbol?'symbols':''}`.trim() || 'none detected'
+    });
+    factors.push({
+      ok: !common,
+      text: common ? 'Matches a commonly used or leaked password' : 'Not found in common-password list',
+      detail: common ? 'this exact password (or a close variant) appears on breach/wordlists attackers try first' : ''
+    });
+    factors.push({
+      ok: !sequential,
+      text: sequential ? 'Contains a sequential run (e.g. "abc", "321")' : 'No sequential character runs',
+      detail: sequential ? 'predictable runs are among the first patterns cracking tools try' : ''
+    });
+    factors.push({
+      ok: !keyboard,
+      text: keyboard ? 'Contains a keyboard-adjacency pattern (e.g. "qwerty")' : 'No keyboard-walk patterns',
+      detail: keyboard ? 'adjacent-key sequences are guessed early by attackers' : ''
+    });
+    factors.push({
+      ok: !repeated,
+      text: repeated ? 'Contains 3+ repeated characters in a row' : 'No long repeated-character runs',
+      detail: repeated ? 'repetition reduces effective randomness' : ''
+    });
+    factors.push({
+      ok: entropy >= 60,
+      mid: entropy >= 35 && entropy < 60,
+      text: `Estimated entropy: ~${entropy} bits`,
+      detail: entropy < 35 ? 'low — likely crackable in a practical timeframe offline' :
+              entropy < 60 ? 'moderate' : 'high — a strong resistance to brute-force guessing'
+    });
+
+    // Recommendations
+    const recs = [];
+    if(len < 12) recs.push('Use at least 12 characters — length matters more than complexity tricks.');
+    if(classCount < 3) recs.push('Mix in more character types: uppercase, lowercase, digits, and symbols.');
+    if(common) recs.push('Avoid this password entirely — it (or a near variant) is on public breach lists.');
+    if(sequential) recs.push('Remove sequential runs like "abc" or "123".');
+    if(keyboard) recs.push('Avoid keyboard-adjacent patterns like "qwerty" or "asdf".');
+    if(repeated) recs.push('Avoid repeating the same character multiple times in a row.');
+    if(recs.length === 0) recs.push('Consider a passphrase of 4–6 random unrelated words for something even more memorable at this strength.');
+    recs.push('Use a unique password per site, generated and stored in a password manager rather than memorized.');
+
+    // Tumbler pins
+    let pinsHtml = '';
+    for(let i=1;i<=5;i++){
+      pinsHtml += `<div class="pin ${i<=tier?'lit':''}" style="${i<=tier?`background:${color};border-color:${color};box-shadow:0 0 12px ${color}`:''}"></div>`;
+    }
+
+    const factorsHtml = factors.map(f => {
+      const dotClass = f.ok ? 'ok' : (f.mid ? 'mid' : 'bad');
+      return `<li><span class="dot ${dotClass}"></span><span><span class="label-txt">${f.text}</span>${f.detail ? ` <span class="detail">— ${f.detail}</span>` : ''}</span></li>`;
+    }).join('');
+
+    const recsClass = tier >= 4 ? 'good' : '';
+
+    results.innerHTML = `
+      <div class="gauge-wrap">
+        <div class="tumblers">${pinsHtml}</div>
+        <div>
+          <div class="verdict" style="color:${color}">${label}</div>
+          <div class="verdict-sub">score ${score} / 100</div>
+        </div>
+      </div>
+      <ul class="factors">${factorsHtml}</ul>
+      <div class="recs ${recsClass}">
+        <h3>${tier >= 4 ? '✅ Notes' : '💡 Recommendations'}</h3>
+        <ul>${recs.map(r => `<li>${r}</li>`).join('')}</ul>
+      </div>
+    `;
+  }
+})();
+</script>
+</body>
+</html>
