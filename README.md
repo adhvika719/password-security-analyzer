@@ -31,8 +31,7 @@ Help users understand how strong (or weak) their passwords are, and why — base
 
 ## 🚀 Running Locally
 ## 🔗 Live Demo
-[Try PassCheck here](paste-your-stackblitz-url-here)
-
+https://passwordsecurityanalyzer-iols-t5jonso0--5173--017acfb7.local-credentialless.webcontainer.io/
 ```bash
 npm install
 npm run dev
