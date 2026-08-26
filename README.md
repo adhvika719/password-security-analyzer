@@ -30,6 +30,8 @@ Help users understand how strong (or weak) their passwords are, and why — base
 - No external libraries or dependencies for the analysis logic
 
 ## 🚀 Running Locally
+## 🔗 Live Demo
+[Try PassCheck here](paste-your-stackblitz-url-here)
 
 ```bash
 npm install
