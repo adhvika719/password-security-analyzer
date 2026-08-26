@@ -29,9 +29,12 @@ Help users understand how strong (or weak) their passwords are, and why — base
 - HTML5 / CSS3
 - No external libraries or dependencies for the analysis logic
 
-## 🚀 Running Locally
 ## 🔗 Live Demo
-https://passwordsecurityanalyzer-iols-t5jonso0--5173--017acfb7.local-credentialless.webcontainer.io/
+
+[Try PassCheck here](https://stackblitz.com/~/github.com/adhvika719/password-security-analyzer)
+
+## 🚀 Running Locally
+
 ```bash
 npm install
 npm run dev
